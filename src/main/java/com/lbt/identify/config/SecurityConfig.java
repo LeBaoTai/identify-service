@@ -31,7 +31,29 @@ public class SecurityConfig {
             "/auth/log-in",
             "/auth/introspect",
             "/auth/logout",
-            "/auth/refresh"
+            "/auth/refresh",
+
+            // swagger
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-resource/**",
+            "/swagger-resource",
+            "/swagger-ui.html",
+            "/configuration/ui",
+            "/configuration/security",
+            "/webjars/**",
+    };
+
+    final String[] publicGetSwagger = {
+            // swagger
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-resource/**",
+            "/swagger-resource",
+            "/swagger-ui.html",
+            "/configuration/ui",
+            "/configuration/security",
+            "/webjars/**",
     };
 
     @Autowired
@@ -40,7 +62,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> {
-            request.requestMatchers(HttpMethod.POST, publicPostRequestPath).permitAll().anyRequest().authenticated();
+            request.requestMatchers(HttpMethod.POST, publicPostRequestPath).permitAll()
+                    .requestMatchers(HttpMethod.GET, publicGetSwagger).permitAll().anyRequest().authenticated();
         });
 
         http.oauth2ResourceServer(oauth2 ->
