@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: identify_service_db
+    image: postgres
+    shm_size: 128mb
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: identifypassword
+      POSTGRES_USERNAME: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
+
+  app:
+    container_name: identify_service_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://0.0.0.0:5432/identify
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: identifypassword
+    ports:
+      - "8080:8080"
+    networks:
+      - my-network
+
+
+networks:
+  my-network:
+    driver: bridge
